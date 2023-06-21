@@ -39,7 +39,6 @@ module.exports = {
     } catch (err) {
       console.log(chalk.red(`❌ >>> Error connecting to MongoDB: ${err}`));
     }
-
     loadCommands(client);
   },
 };

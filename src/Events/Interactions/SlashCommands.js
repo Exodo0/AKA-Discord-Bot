@@ -7,7 +7,7 @@ module.exports = {
    * @param { Client } client
    */
   execute(interaction, client) {
-    client.config = require("../../../config.json");
+    client.config = require("../../../config");
 
     if (!interaction.isChatInputCommand()) return;
 

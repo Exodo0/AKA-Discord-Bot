@@ -25,7 +25,7 @@ module.exports = {
       ].includes(customId)
     )
       return;
-    const docs = await TicketSetup.findOne({ GuildID: guild.id });
+    const docs = await TicketSetup.findOne({ GuildID: guild.id }).exec();
     if (!docs) return;
     const errorEmbed = new EmbedBuilder()
       .setColor("Red")
@@ -41,10 +41,9 @@ module.exports = {
       .setColor("Red")
       .setDescription(config.ticketNoPermissions);
     const alreadyEmbed = new EmbedBuilder().setColor("Orange");
-    TicketSchema.findOne(
-      { GuildID: guild.id, ChannelID: channel.id },
-      async (err, data) => {
-        if (err) throw err;
+    TicketSchema.findOne({ GuildID: guild.id, ChannelID: channel.id })
+      .exec()
+      .then(async (data) => {
         if (!data) return;
         await guild.members.cache.get(data.MemberID);
         await guild.members.cache.get(data.OwnerID);
@@ -276,7 +275,6 @@ module.exports = {
               });
             break;
         }
-      }
-    );
+      });
   },
 };
