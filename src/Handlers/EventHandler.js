@@ -1,4 +1,4 @@
-const fileLoader = require('../Functions/FileLoader');
+const { loadFiles } = require("../Functions/fileLoader");
 
 async function loadEvents(client) {
   console.time("Events Loaded");
