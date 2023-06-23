@@ -53,7 +53,6 @@ module.exports = {
 
     // Apagar el bot
     console.log("Apagando el bot...");
-    // ... código para apagar el bot ...
-    console.log("El bot se ha apagado correctamente.");
+    process.exit(); // Apaga el bot finalizando el proceso
   },
 };
