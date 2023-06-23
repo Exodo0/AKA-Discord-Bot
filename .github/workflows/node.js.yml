@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -23,6 +23,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
       - run: npm install
       - run: node index.js
+      - name: Wait for 1 minute
+        uses: actions/wait-for-action@v2
+        with:
+          time: "1m"
+      - name: Shutdown Windows
+        run: shutdown.exe /s /t 0
