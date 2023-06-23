@@ -18,10 +18,10 @@ async function loadCommands(client) {
 
   console.table(
     commandsArray.map((command) => ({
-      Command: command.name,
+      Commands: command.name,
       Status: "🔹",
     })),
-    ["Command", "Status"]
+    ["Commands", "Status"]
   );
 }
 
