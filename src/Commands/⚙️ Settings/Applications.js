@@ -97,16 +97,15 @@ module.exports = {
 
       if (data) {
         return await interaction.reply({
-          content: "¡El sistema de solicitud ya está configurado!",
+          content: "¡El sistema de aplicación ya está configurado!",
           ephemeral: true,
         });
       }
 
       const embed = new EmbedBuilder()
-        .setTitle("Verificar")
+        .setTitle("Verify")
         .setDescription(
-          description ||
-            "¡Haz clic en el botón de abajo para solicitar entrar en el servidor!"
+          description || "Haga clic en el botón para aplicar al servidor!"
         )
         .setTimestamp();
 
@@ -129,8 +128,7 @@ module.exports = {
         .save()
         .then(async () => {
           return await interaction.reply({
-            content:
-              "¡El sistema de solicitud se ha configurado correctamente!",
+            content: "¡Configuradó con éxito el sistema de aplicación!",
             ephemeral: true,
           });
         });
@@ -147,17 +145,18 @@ module.exports = {
 
       if (!data)
         return await interaction.reply({
-          content: "¡El sistema de solicitud no está configurado!",
+          content: "¡El sistema de aplicación no está configurado!",
           ephemeral: true,
         });
       if (!data._id == id)
         return await interaction.reply({
-          content: "¡No se encontró esa solicitud!",
+          content: "¡No se encontró ese sistema de aplicación!",
           ephemeral: true,
         });
       if (!appData.roleId)
         return await interaction.reply({
-          content: "¡No se encontró el rol de solicitud!",
+          content:
+            "¡No se encuentro el rol! El cual la aplicacion deberia otorgar",
           ephemeral: true,
         });
 
@@ -167,142 +166,144 @@ module.exports = {
       const member = interaction.guild.members.cache.get(data.userId);
 
       const embed = new EmbedBuilder()
-        .setTitle("Solicitud Verificada")
+        .setTitle("Aplicacion Verificada")
         .setDescription(
           `**Usuario:** ${user.tag} (${
             user.id
-          })\n**Estado:** Aceptada\n**Moderador**: ${interaction.user.tag} (${
+          })\n**Estatus:** Aceptado\n**Moderador**: ${interaction.user.tag} (${
             interaction.user.id
-          })\n**Hora:** ${time()}`
+          })\n**Time:** ${time()}`
         )
         .setTimestamp()
         .setColor("Random");
 
       const embed2 = new EmbedBuilder()
-        .setTitle("¡Tu solicitud ha sido aceptada!")
-        .setDescription(`¡Has sido aceptado en ${interaction.guild.name}!`)
+        .setTitle("Hey tu formulario fue aceptado")
+        .setDescription(`Ahora tienes mas acceso a: ${interaction.guild.name}!`)
         .setTimestamp()
         .setColor("Random");
 
       await user.send({ embeds: [embed2] });
       await channel.send({ embeds: [embed] });
       await member.roles.add(role);
+
       await userAppSchema.deleteOne({ _id: id });
+
       await interaction.reply({
-        content: "¡El usuario se ha verificado correctamente!",
+        content: "Verificado correctamente.",
+      });
+    }
+
+    if (interaction.options.getSubcommand() === "deny") {
+      const id = interaction.options.getString("id");
+      const reason = interaction.options.getString("reason");
+      const data = await appSchema.findOne({ guildId: interaction.guild.id });
+      const userData = await userAppSchema.findOne({
+        guildId: interaction.guild.id,
       });
 
-      if (interaction.options.getSubcommand() === "deny") {
-        const id = interaction.options.getString("id");
-        const reason = interaction.options.getString("reason");
-        const data = await appSchema.findOne({ guildId: interaction.guild.id });
-        const userData = await userAppSchema.findOne({
-          guildId: interaction.guild.id,
-        });
-
-        if (!data)
-          return await interaction.reply({
-            content: "¡El sistema de solicitud no está configurado!",
-            ephemeral: true,
-          });
-        if (!userData)
-          return await interaction.reply({
-            content: "¡Nadie ha solicitado entrar en el servidor aún!",
-            ephemeral: true,
-          });
-        if (!data.channelId)
-          return await interaction.reply({
-            content: "¡No se encontró el canal de solicitud!",
-            ephemeral: true,
-          });
-        if (!userData._id == id)
-          return await interaction.reply({
-            content: "¡No se encontró esa solicitud!",
-            ephemeral: true,
-          });
-        if (!data.roleId)
-          return await interaction.reply({
-            content: "¡No se encontró el rol de solicitud!",
-            ephemeral: true,
-          });
-
-        const channel = await client.channels.fetch(data.channelId);
-        const user = client.users.cache.get(userData.userId);
-
-        const userEmbed = new EmbedBuilder()
-          .setTitle("¡Tu solicitud ha sido denegada!")
-          .setDescription(
-            `¡Se te ha denegado la entrada a ${interaction.guild.name}!\n**Motivo:** \`${reason}\``
-          )
-          .setTimestamp()
-          .setColor("Random");
-
-        const denyEmbed = new EmbedBuilder()
-          .setTitle("Solicitud Denegada")
-          .setDescription(
-            `**Usuario:** ${user.tag} (${
-              user.id
-            })\n**Estado:** Denegada\n**Moderador**: ${interaction.user.tag} (${
-              interaction.user.id
-            })\n**Hora:** ${time()}\n**Motivo:** \`${reason}\``
-          )
-          .setTimestamp()
-          .setColor("Random");
-
-        await channel.send({ embeds: [denyEmbed] });
-
-        await userAppSchema.deleteOne({ _id: id });
-
-        await interaction.reply({
-          content: "¡La solicitud se ha denegado correctamente!",
-        });
-
-        await user.send({ embeds: [userEmbed] }).catch(async () => {
-          return await interaction.reply({
-            embeds: [
-              new EmbedBuilder()
-                .setTitle("Error")
-                .setDescription(
-                  "No pude enviar un mensaje al usuario, ¡es posible que tenga los MD desactivados!"
-                )
-                .setColor("Red"),
-            ],
-          });
-        });
-      }
-
-      if (interaction.options.getSubcommand() === "delete") {
-        const data = await appSchema.findOne({
-          guildId: interaction.guild.id,
-        });
-
-        if (!data)
-          return await interaction.reply({
-            content: "¡El sistema de solicitud no está configurado!",
-            ephemeral: true,
-          });
-
-        await client.channels.cache
-          .get(data.channelId)
-          .send({
-            embeds: [
-              new EmbedBuilder()
-                .setTitle("Sistema de Solicitudes Eliminado")
-                .setDescription(
-                  `¡El sistema de solicitud ha sido eliminado por ${interaction.user.tag} (${interaction.user.id})!`
-                )
-                .setTimestamp()
-                .setColor("Random"),
-            ],
-          })
-          .catch();
-
-        await interaction.reply({
-          content: "¡El sistema de solicitud se ha eliminado correctamente!",
+      if (!data)
+        return await interaction.reply({
+          content: "¡El sistema de aplicación no está configurado!",
           ephemeral: true,
         });
-        return await data.deleteOne({ guildId: interaction.guild.id });
-      }
+      if (!userData)
+        return await interaction.reply({
+          content: "¡Nadie ha aplicado al servidor todavía!",
+          ephemeral: true,
+        });
+      if (!data.channelId)
+        return await interaction.reply({
+          content: "¡No se encuentra el canal del Formulario.!",
+          ephemeral: true,
+        });
+      if (!userData._id == id)
+        return await interaction.reply({
+          content: "El Formulario no fue encontrado!",
+          ephemeral: true,
+        });
+      if (!data.roleId)
+        return await interaction.reply({
+          content: "No se encuentra el rol que deberia otorgar el formulario!",
+          ephemeral: true,
+        });
+
+      const channel = await client.channels.fetch(data.channelId);
+      const user = client.users.cache.get(userData.userId);
+
+      const userEmbed = new EmbedBuilder()
+        .setTitle("Tu formulario fue denegado...")
+        .setDescription(
+          `Al parecer no obtendras acceso a:${interaction.guild.name}!\n****Razon:** \`${reason}\``
+        )
+        .setTimestamp()
+        .setColor("Random");
+
+      const denyEmbed = new EmbedBuilder()
+        .setTitle("Formulario denegado")
+        .setDescription(
+          `**Usuario:** ${user.tag} (${
+            user.id
+          })\n**Estado:** Denegado\n**Moderador**: ${interaction.user.tag} (${
+            interaction.user.id
+          })\n**Time:** ${time()}\n**Razon:** \`${reason}\``
+        )
+        .setTimestamp()
+        .setColor("Random");
+
+      await channel.send({ embeds: [denyEmbed] });
+
+      await userAppSchema.deleteOne({ _id: id });
+
+      await interaction.reply({
+        content: "Hecho. fue denegada la solicitud",
+      });
+
+      await user.send({ embeds: [userEmbed] }).catch(async () => {
+        return await interaction.reply({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle("Error")
+              .setDescription(
+                "El usuario tiene sus DMS cerrados. Lamentablemente no podre avisarle"
+              )
+              .setColor("RED"),
+          ],
+        });
+      });
+    }
+
+    if (interaction.options.getSubcommand() === "delete") {
+      const data = await appSchema.findOne({
+        guildId: interaction.guild.id,
+      });
+
+      if (!data)
+        return await interaction.reply({
+          content: "¡El sistema de aplicación no está configurado!",
+          ephemeral: true,
+        });
+
+      await client.channels.cache
+        .get(data.channelId)
+        .send({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle("El Sistema de formularios fue borrado.")
+              .setDescription(
+                `El usuario: ${interaction.user.tag} (${interaction.user.id}) Borro el formulario!`
+              )
+              .setTimestamp()
+              .setColor("Random"),
+          ],
+        })
+        .catch();
+
+      await interaction.reply({
+        content: "Formulario borrado correctamente.",
+        ephemeral: true,
+      });
+      return await data.deleteOne({ guildId: interaction.guild.id });
     }
   },
 };
