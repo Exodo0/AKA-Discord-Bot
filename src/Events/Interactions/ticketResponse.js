@@ -8,8 +8,8 @@ const {
   PermissionFlagsBits,
 } = require("discord.js");
 const TicketSchema = require("../../Schemas/Tickets/Ticket.js");
-const TicketSetup = require("../../Schemas/Tickets/TicketSetup");
-const config = require("../../configTicket");
+const TicketSetup = require("../../Schemas/Tickets/TicketSetup.js");
+const config = require("../../configTicket.js");
 
 module.exports = {
   name: "interactionCreate",

@@ -1,6 +1,6 @@
 const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 const TicketSchema = require("../../Schemas/Tickets/Ticket.js");
-const config = require("../../configTicket");
+const config = require("../../configTicket.js");
 
 module.exports = {
   name: "interactionCreate",
