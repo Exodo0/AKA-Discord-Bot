@@ -24,49 +24,49 @@ module.exports = {
     if (data && data.userId === interaction.user.id)
       return interaction.reply({
         content:
-          "You have already applied for this server. Please wait for a response.",
+          "Disculpa pero tenemos agregado una postulacion tuya. Espera una respuesta dentro de poco.",
         ephemeral: true,
       });
 
     const modal = new ModalBuilder()
       .setCustomId("application-modal")
-      .setTitle(`Apply for this server!`);
+      .setTitle(`Formulario del servidor!`);
 
     const reasonInput = new TextInputBuilder()
       .setCustomId("reason")
-      .setPlaceholder("Why do you want to join?")
+      .setPlaceholder("Cuentanos ¿Porque quieres unirte?")
       .setMinLength(10)
       .setMaxLength(1000)
       .setRequired(true)
-      .setLabel("Reason for joining")
+      .setLabel("Ingresa tus razones.")
       .setStyle(TextInputStyle.Paragraph);
     const ageInput = new TextInputBuilder()
-      .setLabel("Age")
+      .setLabel("Edad")
       .setCustomId("age")
-      .setPlaceholder("How old are you?")
+      .setPlaceholder("Cuantos años tienes?")
       .setMinLength(1)
       .setMaxLength(3)
       .setRequired(true)
       .setStyle(TextInputStyle.Short);
     const nameInput = new TextInputBuilder()
-      .setLabel("Name")
+      .setLabel("Nombre")
       .setCustomId("name")
-      .setPlaceholder("What is your name? (optional)")
+      .setPlaceholder("Cual es tu nombre? (opcional)")
       .setMaxLength(100)
       .setRequired(false)
       .setStyle(TextInputStyle.Short);
     const pronounsInput = new TextInputBuilder()
-      .setLabel("Pronouns")
+      .setLabel("Pronombres")
       .setCustomId("pronouns")
-      .setPlaceholder("What are your pronouns? (optional)")
+      .setPlaceholder("Cual es tu apodo? (opcional)")
       .setMaxLength(100)
       .setRequired(false)
       .setStyle(TextInputStyle.Short);
     const locationInput = new TextInputBuilder()
-      .setLabel("Location")
+      .setLabel("Pais")
       .setCustomId("location")
       .setRequired(false)
-      .setPlaceholder("What continent are you from? (optional)")
+      .setPlaceholder("De que pais perteneces? (opcional)")
       .setMaxLength(100)
       .setStyle(TextInputStyle.Short);
 

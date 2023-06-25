@@ -18,73 +18,69 @@ const userAppSchema = require("../../Schemas/Guilds/userAppSchema");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("applications")
-    .setDescription("Verify a user or setup the verification system..")
+    .setDescription("Verifica a un usuario o Configura nuestro sistema.")
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
     .addSubcommand((subcommand) => {
       return subcommand
         .setName("setup")
-        .setDescription("Setup the verification system.")
+        .setDescription("🛠 Configura el sistema de applicaciones.")
         .addChannelOption((channel) => {
           return channel
             .setName("channel")
-            .setDescription("The channel to send the verification message in.")
+            .setDescription("🗂 Canal donde enviare el menu.")
             .setRequired(true)
             .addChannelTypes(ChannelType.GuildText);
         })
         .addRoleOption((role) => {
           return role
             .setName("role")
-            .setDescription("The role to give the user after they verify.")
+            .setDescription("🔎 Que rol otorgare una vez sean validados.")
             .setRequired(true);
         })
         .addChannelOption((channel) => {
           return channel
             .setName("log_channel")
-            .setDescription("The channel to log the verification messages in.")
+            .setDescription("📄 Donde enviare mi log.")
             .setRequired(true);
         })
         .addStringOption((option) => {
           return option
             .setName("description")
-            .setDescription("The description of the verification embed.");
+            .setDescription("🖊 Agrega una descripcion al menu.");
         });
     })
     .addSubcommand((subcommand) => {
       return subcommand
         .setName("verify")
-        .setDescription("Verify a user.")
+        .setDescription("🔹 Verifica aun usuario.")
         .addStringOption((string) => {
           return string
             .setName("id")
-            .setDescription(
-              "The verification id provided in the application embed."
-            )
+            .setDescription("🖊 Ingresa el ID proporcionado en el Embed.")
             .setRequired(true);
         });
     })
     .addSubcommand((subcommand) => {
       return subcommand
         .setName("deny")
-        .setDescription("Deny a user.")
+        .setDescription("🔴 Niega la aplicacion del usuario.")
         .addStringOption((string) => {
           return string
             .setName("id")
-            .setDescription(
-              "The verification id provided in the application embed."
-            )
+            .setDescription("🖊 Ingresa el ID proporcionado en el Embed.")
             .setRequired(true);
         })
         .addStringOption((string) => {
           return string
             .setName("reason")
-            .setDescription("The reason for denying the user.")
+            .setDescription("🖊 Ingresa una razon.")
             .setRequired(true);
         });
     })
     .addSubcommand((subcommand) => {
       return subcommand
         .setName("delete")
-        .setDescription("Delete the application schema");
+        .setDescription("🧹 Borra el Sistema de aplicaciones.");
     }),
   /**
    * @param {Client} client
@@ -101,22 +97,23 @@ module.exports = {
 
       if (data) {
         return await interaction.reply({
-          content: "The application system is already setup!",
+          content: "¡El sistema de solicitud ya está configurado!",
           ephemeral: true,
         });
       }
 
       const embed = new EmbedBuilder()
-        .setTitle("Verify")
+        .setTitle("Verificar")
         .setDescription(
-          description || "Click the button below to apply to the server!"
+          description ||
+            "¡Haz clic en el botón de abajo para solicitar entrar en el servidor!"
         )
         .setTimestamp();
 
       const buttons = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setEmoji("✅")
-          .setLabel("Apply")
+          .setLabel("Aplicar")
           .setStyle(ButtonStyle.Success)
           .setCustomId("apply")
       );
@@ -132,7 +129,8 @@ module.exports = {
         .save()
         .then(async () => {
           return await interaction.reply({
-            content: "Successfully setup the application system!",
+            content:
+              "¡El sistema de solicitud se ha configurado correctamente!",
             ephemeral: true,
           });
         });
@@ -149,17 +147,17 @@ module.exports = {
 
       if (!data)
         return await interaction.reply({
-          content: "The application system is not setup!",
+          content: "¡El sistema de solicitud no está configurado!",
           ephemeral: true,
         });
       if (!data._id == id)
         return await interaction.reply({
-          content: "That application was not found!",
+          content: "¡No se encontró esa solicitud!",
           ephemeral: true,
         });
       if (!appData.roleId)
         return await interaction.reply({
-          content: "The application role is not found!",
+          content: "¡No se encontró el rol de solicitud!",
           ephemeral: true,
         });
 
@@ -169,22 +167,20 @@ module.exports = {
       const member = interaction.guild.members.cache.get(data.userId);
 
       const embed = new EmbedBuilder()
-        .setTitle("Application Verified")
+        .setTitle("Solicitud Verificada")
         .setDescription(
-          `**User:** ${user.tag} (${
+          `**Usuario:** ${user.tag} (${
             user.id
-          })\n**Status:** Accepted\n**Moderator**: ${interaction.user.tag} (${
+          })\n**Estado:** Aceptada\n**Moderador**: ${interaction.user.tag} (${
             interaction.user.id
-          })\n**Time:** ${time()}`
+          })\n**Hora:** ${time()}`
         )
         .setTimestamp()
         .setColor("Random");
 
       const embed2 = new EmbedBuilder()
-        .setTitle("Your application has been accepted!")
-        .setDescription(
-          `You have been accepted into ${interaction.guild.name}!`
-        )
+        .setTitle("¡Tu solicitud ha sido aceptada!")
+        .setDescription(`¡Has sido aceptado en ${interaction.guild.name}!`)
         .setTimestamp()
         .setColor("Random");
 
@@ -193,7 +189,7 @@ module.exports = {
       await member.roles.add(role);
       await userAppSchema.deleteOne({ _id: id });
       await interaction.reply({
-        content: "Successfully verified the user!",
+        content: "¡El usuario se ha verificado correctamente!",
       });
 
       if (interaction.options.getSubcommand() === "deny") {
@@ -206,27 +202,27 @@ module.exports = {
 
         if (!data)
           return await interaction.reply({
-            content: "The application system is not setup!",
+            content: "¡El sistema de solicitud no está configurado!",
             ephemeral: true,
           });
         if (!userData)
           return await interaction.reply({
-            content: "No one has applied to the server yet!",
+            content: "¡Nadie ha solicitado entrar en el servidor aún!",
             ephemeral: true,
           });
         if (!data.channelId)
           return await interaction.reply({
-            content: "The application channel is not found!",
+            content: "¡No se encontró el canal de solicitud!",
             ephemeral: true,
           });
         if (!userData._id == id)
           return await interaction.reply({
-            content: "That application was not found!",
+            content: "¡No se encontró esa solicitud!",
             ephemeral: true,
           });
         if (!data.roleId)
           return await interaction.reply({
-            content: "The application role is not found!",
+            content: "¡No se encontró el rol de solicitud!",
             ephemeral: true,
           });
 
@@ -234,21 +230,21 @@ module.exports = {
         const user = client.users.cache.get(userData.userId);
 
         const userEmbed = new EmbedBuilder()
-          .setTitle("Your application has been denied!")
+          .setTitle("¡Tu solicitud ha sido denegada!")
           .setDescription(
-            `You have been denied entry to ${interaction.guild.name}!\n****Reason:** \`${reason}\``
+            `¡Se te ha denegado la entrada a ${interaction.guild.name}!\n**Motivo:** \`${reason}\``
           )
           .setTimestamp()
           .setColor("Random");
 
         const denyEmbed = new EmbedBuilder()
-          .setTitle("Application Denied")
+          .setTitle("Solicitud Denegada")
           .setDescription(
-            `**User:** ${user.tag} (${
+            `**Usuario:** ${user.tag} (${
               user.id
-            })\n**Status:** Denied\n**Moderator**: ${interaction.user.tag} (${
+            })\n**Estado:** Denegada\n**Moderador**: ${interaction.user.tag} (${
               interaction.user.id
-            })\n**Time:** ${time()}\n**Reason:** \`${reason}\``
+            })\n**Hora:** ${time()}\n**Motivo:** \`${reason}\``
           )
           .setTimestamp()
           .setColor("Random");
@@ -258,7 +254,7 @@ module.exports = {
         await userAppSchema.deleteOne({ _id: id });
 
         await interaction.reply({
-          content: "Successfully denied the application!",
+          content: "¡La solicitud se ha denegado correctamente!",
         });
 
         await user.send({ embeds: [userEmbed] }).catch(async () => {
@@ -267,9 +263,9 @@ module.exports = {
               new EmbedBuilder()
                 .setTitle("Error")
                 .setDescription(
-                  "I was unable to send the user a message, the user may have DMs disabled!"
+                  "No pude enviar un mensaje al usuario, ¡es posible que tenga los MD desactivados!"
                 )
-                .setColor("RED"),
+                .setColor("Red"),
             ],
           });
         });
@@ -282,7 +278,7 @@ module.exports = {
 
         if (!data)
           return await interaction.reply({
-            content: "The application system is not setup!",
+            content: "¡El sistema de solicitud no está configurado!",
             ephemeral: true,
           });
 
@@ -291,9 +287,9 @@ module.exports = {
           .send({
             embeds: [
               new EmbedBuilder()
-                .setTitle("Application System Deleted")
+                .setTitle("Sistema de Solicitudes Eliminado")
                 .setDescription(
-                  `The application system has been deleted by ${interaction.user.tag} (${interaction.user.id})!`
+                  `¡El sistema de solicitud ha sido eliminado por ${interaction.user.tag} (${interaction.user.id})!`
                 )
                 .setTimestamp()
                 .setColor("Random"),
@@ -302,7 +298,7 @@ module.exports = {
           .catch();
 
         await interaction.reply({
-          content: "Successfully deleted the application system!",
+          content: "¡El sistema de solicitud se ha eliminado correctamente!",
           ephemeral: true,
         });
         return await data.deleteOne({ guildId: interaction.guild.id });
