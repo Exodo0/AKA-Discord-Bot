@@ -1,4 +1,4 @@
-# AKA-PVP-System-Randomizer
+# AKA
 
 Bot de Discord dedicado a Moderar y Entretener a tus Usuarios en Discord.
 
