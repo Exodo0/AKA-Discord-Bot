@@ -1,16 +1,16 @@
 # AKA-PVP-System-Randomizer
 
-Bot de Discord dedicado a seleccionar usuarios del servidor donde se encuentra para enfrentarlos a 1v1 en Combat Warriors
+Bot de Discord dedicado a Moderar y Entretener a tus Usuarios en Discord.
 
 ## Funcionalidades principales
 
 El bot cuenta con las siguientes funcionalidades:
 
-- Sistema de selección aleatoria de usuarios.
-- Sistema de 1v1 para enfrentamientos.
-- Integración de botones en los embeds.
-- Selección de ganadores por parte de los moderadores.
-- Otorgamiento de roles o insignias a los ganadores.
-- Seleccion de usuarios en tu servidor (10 Usuarios Max)
+- Sistema de Tickets.
+- Sistema de Giveways.
+- Integración de Embeds. [Puedes Configurarlo a base de Anuncios e incluso tus nuevos videos en YT].
+- Sistema de Moderacion. [Mute, Ban, Kick, Aislamiento] entre mas
+- Automaticacion de Moderacion. [Detecta los diferentes Links Maliciosos o Malas Palabras]
+- Entre muchas cosas mas.
 
 ## Currently on Development
