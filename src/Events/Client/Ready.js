@@ -3,12 +3,6 @@ const { loadCommands } = require("../../Handlers/CommandHandler");
 const { connect } = require("mongoose");
 const chalk = require("chalk");
 
-// Función para esperar durante 2 minutos
-function wait(minutes) {
-  const milliseconds = minutes * 60 * 1000;
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-}
-
 module.exports = {
   name: "ready",
   once: true,
@@ -46,13 +40,5 @@ module.exports = {
       console.log(chalk.red(`❌ >>> Error connecting to MongoDB: ${err}`));
     }
     loadCommands(client);
-
-    // Esperar durante 2 minutos
-    console.log("Esperando 2 minutos antes de apagar...");
-    await wait(2);
-
-    // Apagar el bot
-    console.log("Apagando el bot...");
-    process.exit(); // Apaga el bot finalizando el proceso
   },
 };
