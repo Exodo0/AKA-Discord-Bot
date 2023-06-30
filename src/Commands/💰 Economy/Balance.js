@@ -28,7 +28,7 @@ module.exports = {
             .setThumbnail(user.avatarURL({ dynamic: true }))
             .setColor("Red")
             .setDescription(
-              `Oops! ${user.username} aún no tiene saldo. ¡Una razón para esto es que es posible que aún no hayan hablado en este servidor o que los administradores hayan eliminado su saldo!`
+              `!Hey! ${user.username} Aun no tiene Creditos. Intentalo mas tarde empieza interactuando con nuestros usuarios`
             ),
         ],
         ephemeral: true,

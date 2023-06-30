@@ -20,17 +20,17 @@ module.exports = {
     .addSubcommand((subCommand) => {
       return subCommand
         .setName("add")
-        .setDescription("➕ Agrega algun Item a la tienda.")
+        .setDescription("🛍️  Agrega algun Item a la tienda.")
         .addStringOption((str) => {
           return str
             .setName("name")
-            .setDescription("📝 El nombre del producto. (no el identificador)")
+            .setDescription("🛍️ Ingresa el nombre del producto.")
             .setRequired(true);
         })
         .addStringOption((str) => {
           return str
             .setName("description")
-            .setDescription("📝 Ingresa la descripcion del Item")
+            .setDescription("🛍️ Ingresa la descripcion del Item")
             .setRequired(true);
         })
         .addNumberOption((num) => {
