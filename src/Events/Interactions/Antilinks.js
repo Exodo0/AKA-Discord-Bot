@@ -1,5 +1,4 @@
 const { Client, EmbedBuilder, PermissionFlagsBits } = require("discord.js");
-
 const AntiLinks = require("../../Schemas/Guilds/AntiLinksSchema");
 
 module.exports = {
