@@ -1,5 +1,5 @@
 async function loadCommands(client) {
-  const { loadFiles } = require("../Functions/FileLoader");
+  const { loadFiles } = require("../Functions/fileLoader");
   client.commands = new Map();
 
   await client.commands.clear();
