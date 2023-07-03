@@ -221,12 +221,12 @@ module.exports = {
           });
 
           const embed = new EmbedBuilder()
-            .setTitle(`📊 Leaderboard from: ${guild.name}`)
+            .setTitle(`📊 Leaderboard del Servidor: ${guild.name}`)
             .setColor("Random")
             .setThumbnail(guild.iconURL({ dynamic: true }))
             .setDescription("```" + table.toString() + "```")
             .setFooter(
-              { text: `Requested by ${interaction.user.tag}` },
+              { text: `Pedido por: ${interaction.user.tag}` },
               { iconURL: interaction.user.displayAvatarURL({ dynamic: true }) }
             );
 
