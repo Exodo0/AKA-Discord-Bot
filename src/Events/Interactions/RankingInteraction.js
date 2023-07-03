@@ -9,7 +9,6 @@ const cooldown = new Set();
 
 module.exports = {
   name: "messageCreate",
-  once: true,
 
   async execute(message, client) {
     /**
