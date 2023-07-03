@@ -4,10 +4,13 @@
     "canvacord": "^5.4.10",
     "canvas": "^2.11.2",
     "chalk": "^4.1.2",
+    "discord-arts": "^0.4.0",
     "discord-html-transcripts": "^3.1.4",
     "discord.js": "^14.11.0",
     "glob": "^10.2.7",
+    "googleapis": "^120.0.0",
     "mongoose": "^7.3.0",
-    "openai": "^3.3.0"
+    "openai": "^3.3.0",
+    "superagent": "^8.0.9"
   }
 }
