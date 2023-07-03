@@ -6,7 +6,8 @@ const {
   PermissionFlagsBits,
   ChatInputCommandInteraction,
 } = require("discord.js");
-
+const AsciiTable = require("ascii-table");
+const table = new AsciiTable().setHeading("#", "User", "Level", "XP");
 const { Rank } = require("canvacord");
 const User = require("../../Schemas/Ranking/RankingSchema");
 const ChannelDB = require("../../Schemas/Ranking/RankingChannelSchema");
@@ -164,7 +165,6 @@ module.exports = {
         let user;
         const guildId = member.guild.id;
         const userId = member.user.id;
-
         user = await User.findOne({ guildId, userId });
 
         if (!user) {
@@ -203,32 +203,49 @@ module.exports = {
           .sort({ level: -1 })
           .limit(10);
 
-        startIndex = 0;
+        const startIndex = 0;
 
         if (users.length) {
-          const embed = new EmbedBuilder()
-            .setTitle(`📊 Leaderboard del servidor: ${guild.name}`)
-            .setColor("Random")
-            .setThumbnail(guild.iconURL({ dynamic: true }))
-            .setFooter(
-              { text: `Pedido por: ${interaction.user.tag}` },
-              { iconURL: interaction.user.displayAvatarURL({ dynamic: true }) }
-            );
+          // Generar la tabla de clasificación
+          const table = new AsciiTable("Ranking");
+          table.setHeading("Posición", "Usuario", "Nivel", "XP");
 
           users.forEach((user, position) => {
             const member = interaction.guild.members.cache.get(user.userId);
-            embed.setFields({
-              name: `**#${startIndex + position + 1}**`,
-              value: `**Usuario:** ${
-                member ? `*${member.user.username}*` : "*Usuario desconocido*"
-              }\n**Nivel:** **${user.level}**\n**XP:** *${user.xp}*`,
-              inline: true,
-            });
+            table.addRow(
+              startIndex + position + 1,
+              member ? member.user.username : "Unknown User",
+              user.level,
+              user.xp
+            );
           });
 
-          interaction.reply({ embeds: [embed] });
-        }
+          const embed = new EmbedBuilder()
+            .setTitle(`📊 Leaderboard from: ${guild.name}`)
+            .setColor("Random")
+            .setThumbnail(guild.iconURL({ dynamic: true }))
+            .setDescription("```" + table.toString() + "```")
+            .setFooter(
+              { text: `Requested by ${interaction.user.tag}` },
+              { iconURL: interaction.user.displayAvatarURL({ dynamic: true }) }
+            );
 
+          interaction.reply({ embeds: [embed] });
+        } else {
+          // No hay usuarios registrados en la tabla de clasificación
+          const noRankingEmbed = new EmbedBuilder()
+            .setTitle("📊 Leaderboard")
+            .setColor("Random")
+            .setDescription(
+              "No hay una tabla de clasificación disponible actualmente."
+            )
+            .setFooter(
+              { text: `Requested by ${interaction.user.tag}` },
+              { iconURL: interaction.user.displayAvatarURL({ dynamic: true }) }
+            );
+
+          interaction.reply({ embeds: [noRankingEmbed] });
+        }
         break;
       case "delete":
         if (
