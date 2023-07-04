@@ -34,7 +34,6 @@ const gerateToken = require("./src/Functions/GenerateToken");
 client.config = require("./config.json");
 client.selectMenus = new Collection();
 client.modals = new Collection();
-client.buttons = new Collection();
 
 loadEvents(client);
 fetchBalance(client);
