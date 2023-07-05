@@ -1,5 +1,6 @@
 const { MONGO_URI } = require("../../../config.json");
 const { loadCommands } = require("../../Handlers/CommandHandler");
+const { loadButtons } = require("../../Handlers/ButtonHandler");
 const { connect } = require("mongoose");
 const chalk = require("chalk");
 
@@ -40,5 +41,6 @@ module.exports = {
       console.log(chalk.red(`❌ >>> Error connecting to MongoDB: ${err}`));
     }
     loadCommands(client);
+    loadButtons(client);
   },
 };
