@@ -15,6 +15,11 @@ const rankingChannelSchema = new mongoose.Schema({
       "https://wallpapertag.com/wallpaper/full/e/c/6/477550-most-popular-hubble-ultra-deep-field-wallpaper-1920x1200.jpg",
     required: false,
   },
+  status: {
+    type: Boolean,
+    default: true,
+    required: false,
+  },
 });
 
 const ChannelDB = mongoose.model("ChannelDB", rankingChannelSchema);

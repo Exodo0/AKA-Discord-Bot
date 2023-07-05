@@ -24,6 +24,13 @@ module.exports = {
     let user;
 
     try {
+      const channelDB = await ChannelDB.findOne({ guild: guildId });
+
+      if (!channelDB || !channelDB.status) {
+        // El sistema de niveles está desactivado, no registrar ni enviar mensajes de nivel
+        return;
+      }
+
       const XpAmount = Math.floor(Math.random() * (25 - 15 + 1) + 15);
 
       user = await User.findOneAndUpdate(
@@ -46,20 +53,21 @@ module.exports = {
         xp = 0;
 
         let notificationChannel = null;
-        const channelDB = await ChannelDB.findOne({ guild: message.guild.id });
 
         if (channelDB) {
           try {
             notificationChannel = await client.channels.fetch(
-              channelDB.channel
+              channelDB.notificationChannel
             );
           } catch (err) {
             console.log(err);
           }
         }
+
         if (!notificationChannel) {
           notificationChannel = message.channel;
         }
+
         const embed = new EmbedBuilder()
           .setTitle("🎉 Felicidades 🎉")
           .setThumbnail(message.author.avatarURL({ dynamic: true }))
@@ -72,7 +80,7 @@ module.exports = {
             { name: "Nivel:", value: `${level}`, inline: true },
             {
               name: "Revisa el ranking global usando:",
-              value: `\`/ranking leadearboard\``,
+              value: "`/ranking leadearboard`",
             }
           )
           .setColor("Aqua");
@@ -91,7 +99,7 @@ module.exports = {
         );
       }
     } catch (error) {
-      console.log(err);
+      console.log(error);
     }
 
     cooldown.add(message.author.id);

@@ -38,6 +38,23 @@ module.exports = {
     )
     .addSubcommand((subcommand) =>
       subcommand
+        .setName("status")
+        .setDescription(
+          "🛠 Configura si quieres desactivar o activar el sistema de niveles."
+        )
+        .addStringOption((option) =>
+          option
+            .setName("turn")
+            .setDescription("⚙️ Elige una opcion.")
+            .setRequired(true)
+            .addChoices(
+              { name: "on", value: "activate" },
+              { name: "off", value: "disabled" }
+            )
+        )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
         .setName("view")
         .setDescription("🔎 Revisa el Nivel de Algun Usuario o El tuyo")
         .addUserOption((option) =>
@@ -108,7 +125,7 @@ module.exports = {
           });
         }
 
-        const Completed = new EmbedBuilder()
+        const completedEmbed = new EmbedBuilder()
           .setColor("Green")
           .setImage(
             image.proxyURL ||
@@ -116,23 +133,24 @@ module.exports = {
           )
           .setFields(
             {
-              name: "💠 Configuraste exitosamente el canal de avisos de ranking",
-              value: `Moderador: <@${interaction.member.id}>`,
+              name: "💠 Ranking Announcement Channel Successfully Configured",
+              value: `Moderator: <@${interaction.member.id}>`,
             },
             {
-              name: "Canal donde se encuentra configurado:",
+              name: "Configured Channel:",
               value: `<#${channel.id}>`,
               inline: true,
             },
             {
-              name: "Si agregaste una imagen al background",
-              value: "La veras en este embed o veras la imagen por defecto.",
+              name: "If you added a background image",
+              value:
+                "You will see it in this embed, or you will see the default image.",
             }
           )
           .setTimestamp();
 
         interaction.reply({
-          embeds: [Completed],
+          embeds: [completedEmbed],
         });
 
         const newChannelDB = new ChannelDB({
@@ -284,7 +302,6 @@ module.exports = {
 
         const deletedChannelDB = await ChannelDB.findOneAndDelete({
           guild: guild.id,
-          channel: channelDB2.channel,
         });
 
         if (!deletedChannelDB) {
@@ -314,6 +331,35 @@ module.exports = {
           ],
           ephemeral: true,
         });
+        break;
+      case "status":
+        const status = interaction.options.getString("turn");
+        const channelDB3 = await ChannelDB.findOne({ guild: guild.id });
+
+        if (status === "on") {
+          channelDB3.status = true;
+        } else if (status === "off") {
+          channelDB3.status = false;
+        }
+
+        await channelDB3.save();
+
+        const statusText = channelDB3.status ? "on" : "off";
+
+        const embed = new EmbedBuilder()
+          .setTitle("💠 System Configuration Complete")
+          .setThumbnail(guild.iconURL({ dynamic: true }))
+          .setColor("Random")
+          .setFields(
+            { name: "Moderator:", value: `${interaction.user.username}` },
+            {
+              name: "The leveling system has been configured as:",
+              value: `Leveling: ${statusText}`,
+            }
+          )
+          .setTimestamp();
+
+        interaction.reply({ embeds: [embed], ephemeral: true });
         break;
     }
   },
