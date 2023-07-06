@@ -27,11 +27,11 @@ module.exports = {
       const channelDB = await ChannelDB.findOne({ guild: guildId });
 
       if (!channelDB || !channelDB.status) {
-        // El sistema de niveles está desactivado, no registrar ni enviar mensajes de nivel
+        // The leveling system is disabled, do not record or send level-up messages
         return;
       }
 
-      const XpAmount = Math.floor(Math.random() * (25 - 15 + 1) + 15);
+      const xpAmount = Math.floor(Math.random() * (25 - 15 + 1) + 15);
 
       user = await User.findOneAndUpdate(
         {
@@ -41,7 +41,7 @@ module.exports = {
         {
           guildId,
           userId,
-          $inc: { xp: XpAmount },
+          $inc: { xp: xpAmount },
         },
         { upsert: true, new: true }
       );
@@ -69,18 +69,18 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-          .setTitle("🎉 Felicidades 🎉")
+          .setTitle("🎉 Congratulations! 🎉")
           .setThumbnail(message.author.avatarURL({ dynamic: true }))
           .addFields(
             {
-              name: "Usuario:",
+              name: "User:",
               value: `${message.author.username}`,
               inline: true,
             },
-            { name: "Nivel:", value: `${level}`, inline: true },
+            { name: "Level:", value: `${level}`, inline: true },
             {
-              name: "Revisa el ranking global usando:",
-              value: "`/ranking leadearboard`",
+              name: "Check the global leaderboard using:",
+              value: "`/ranking leaderboard`",
             }
           )
           .setColor("Aqua");
